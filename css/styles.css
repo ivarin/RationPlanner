@@ -1,0 +1,195 @@
+h1 {
+	color: #FFFFFF;
+	font-size: 48px;
+	font-variant: small-caps;
+}
+
+h2, h3, h4, h5 {
+	color: #648880;
+}
+
+ul {
+	list-style-type: none; 
+}
+
+th {
+	color: #202524;
+	text-align: center;
+	font-weight: normal !important;
+}
+
+.header {
+	background-image: -webkit-gradient(linear, left bottom, right bottom, color-stop(0, #A2B8B3), color-stop(1, #F6F1D3));
+	background-image: -o-linear-gradient(right, #A2B8B3 0%, #F6F1D3 100%);
+	background-image: -moz-linear-gradient(right, #A2B8B3 0%, #F6F1D3 100%);
+	background-image: -webkit-linear-gradient(right, #A2B8B3 0%, #F6F1D3 100%);
+	background-image: -ms-linear-gradient(right, #A2B8B3 0%, #F6F1D3 100%);
+	background-image: linear-gradient(to right, #A2B8B3 0%, #F6F1D3 100%);
+
+	margin-bottom: 20px;
+}
+
+.btn {
+	border: none;
+	color: #FFF;
+}
+
+.btn-reset-filters {
+	background: #A2B8B3;	
+	float: left;
+	margin-right: 25px;
+}
+
+.btn-type-filter,
+.btn-toTop,
+.btn-print,
+.btn-hide-limits,
+.btn-reset-limits,
+.btn-addDish {
+	background: #B5C6C2;	
+}
+
+.btn-addDish:hover {
+	background: #EFF7F2;
+}
+
+.btn:focus {
+	color: #FFF;
+}
+
+.btn:hover,
+.btn-type-filter-active {	
+	color: #FFF;
+	font-weight: bold;	
+	background: #A2B8B3;
+}
+
+.btn-type-filter-active {	
+	text-decoration: underline !important;	
+}
+
+.btn-type-filter {
+	margin-bottom: 20px;
+}
+
+.btn-type-filter:first-letter {
+	text-transform: uppercase;
+}
+
+.btn-print {
+	float: right;	
+}
+
+.ingredients-avail a:hover, 
+.chosen-dishes a:hover {
+	background: #800000;
+}
+
+.ingredients-excluded a:hover {
+	background: #005200;
+}
+
+.chosen-dishes a:after {
+	content: ' [x]';
+}
+
+.ingredients-avail a:hover:after {
+	content: ' [–]';
+}
+
+.ingredients-excluded a:hover:after {
+	content: ' [+]';
+}
+
+.panel{
+	background: #F6F8F7;
+}
+
+.panel-daily-ration {
+	text-align: center;
+}
+
+.panel-meal {
+	text-align: center;
+}
+
+.dish-types li {
+	display: inline;
+}
+
+.type-filters {
+	text-align: center;
+}
+
+.nutrients-limits, 
+.nutrients-filters {
+	table-layout: fixed;	
+}
+
+#print {
+    position: fixed;    
+    bottom: 15px;
+    right: 0;  
+}
+
+.print-ration {
+	table-layout: fixed;
+}
+
+.fa-print {	
+	font-size: 16px;
+}
+
+.label-default {
+	background: #82938F;
+}
+
+#datepicker {
+	text-align: center;
+}
+
+#toTop {
+    position: fixed; 
+    left: 0;    
+    bottom: 15px;     
+}
+
+.daily-ration.affix {	
+	top: 20px;
+	margin-right: 15px;
+}
+
+.daily-ration {
+	height: auto;
+	max-height: 550px;
+	overflow: auto;	
+}
+
+.panel-daily-ration {
+	text-align: center;
+}
+
+.chosen-dishes li{
+	text-align: left;
+	margin-bottom: 2px;
+}
+
+.table-dishes tr:not(:last-child) {
+	text-align: center;
+}
+
+.visible-print-block {
+	text-align: center;
+}
+
+.daily-ration-print {
+	width: 33%;
+	float: left;
+}
+
+.daily-ration-print ul {
+	padding-left: 10px !important;
+	text-align: left;	
+}
+
+

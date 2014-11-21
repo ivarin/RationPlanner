@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Ration Planner</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet" >
+    <link href="css/styles.css" rel="stylesheet" />    
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>  
+
+<body>
+    <div class="container-fluid">
+        <div class="row header hidden-print">
+            <div class="col-sm-12">
+                <h1>Ration Planner</h1>
+                <hr/>
+            </div>  
+        </div>     
+
+        <div class="row">
+            <div class="col-sm-3 hidden-print">   
+                <div class="panel panel-default">
+                    <div class="panel-heading">                      
+                        <h4>Dishes</h4>
+                    </div>
+                    <div class="panel-body"> 
+                        <div class="input-group">
+                            <input type="text" class="form-control name-filter" data-bind="value: filters.name, valueUpdate:'afterkeydown'">
+                            <span class="input-group-addon">Filter</span>
+                        </div> 
+                    </div>
+                </div>                        
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Nutrients (<)</h4>
+                    </div>
+                        <table class="table table-hover table-condensed nutrients-filters">
+                        <thead>
+                            <tr>
+                                <th>Kcalories</th>
+                                <th>Protein</th>
+                                <th>Carbs</th>
+                                <th>Fat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="" data-bind="value: filters.kcalories, valueUpdate:'afterkeydown'"/>                                   
+                                </td>
+                                <td> 
+                                   <input type="text" class="form-control" data-bind="value: filters.protein, valueUpdate:'afterkeydown'"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: filters.carbs, valueUpdate:'afterkeydown'"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: filters.fat, valueUpdate:'afterkeydown'"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel panel-default ingredients-avail">  
+                    <div class="panel-heading">
+                        <h4>Ingredients</h4>
+                    </div> 
+                    <div class="panel-body" data-bind="foreach: filteredIngredients">
+                        <a class="label label-default" data-bind="text: $data, click: $root.filters.excludeIngredient"></a>  
+                    </div>  
+                </div>                    
+
+                <div class="panel panel-default ingredients-excluded" data-bind="visible: filters.ingredients().length != 0">  
+                    <div class="panel-heading">
+                        <h4>Excluded ingredients</h4>
+                    </div>
+                    <div class="panel-body" data-bind="foreach: filters.ingredients">      
+                        <a class="label label-default" data-bind="text: $data, click: $root.filters.returnExcludedIngredient"></a>
+                    </div> 
+                </div>                
+            </div>
+
+            <div class="col-sm-5 hidden-print">                
+                <div class="type-filters">
+                    <button type="button" class="btn btn-reset-filters" data-bind="click: filters.resetAllFilters">Show all</button> 
+
+                    <div class="type-filters" data-bind="foreach: dishTypes()">
+                        <button type="button" class="btn btn-type-filter" data-bind="click: $root.filters.setActiveDishType, text: $data"></button>       
+                    </div>                    
+                </div>
+
+                <div data-bind="foreach: {data: filteredDishes, as: 'dish'}">
+                    <table class="table table-hover table-dishes">
+                        <tr>
+                            <td rowspan="4">
+                                <img data-bind="attr: {src: dish.img, width: '220px'}"/>
+                            </td>
+                        </tr>
+                        <tr>                
+                            <td colspan="4">
+                                <h3 data-bind="text: dish.name">Dish</h3>
+                                <div data-bind="foreach: {data: $root.currentDateRation().meals, as: 'meal'}">
+                                    <button type="button" class="btn btn-sm btn-addDish" data-bind="text: meal.title, click: function(){meal.addDish(dish)}"></button>
+                                </div>
+                            </td>               
+                        </tr>
+                        <tr>
+                            <td>Kcalories
+                                <span data-bind="text: dish.kcalories"></span>
+                            </td>
+                            <td>Protein
+                                <span data-bind="text: dish.protein"></span>
+                            </td>
+                            <td>Carbs
+                                <span data-bind="text: dish.carbs"></span>
+                            </td>
+                            <td>Fat
+                                <span data-bind="text: dish.fat"></span>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td colspan="4">
+                                Ingredients: 
+                                <!--ko foreach: dish.ingredients-->
+                                <span data-bind="text: $data" class="label label-default"></span>
+                                <!--/ko--> 
+                            </td>
+                        </tr>
+                    </table>     
+                </div>
+            </div>
+
+            <div class="col-sm-4 hidden-print"> 
+                <div class="panel panel-default panel-daily-ration">
+                    <div class="panel-heading">
+                        <h2>Daily ration</h2>
+                        <h4 data-bind="text: currentDateRation().date"></h4>
+                        <hr/>                        
+                        <div class="input-group datepicker">    
+                            <span class="input-group-addon">Change date: </span>
+                            <input type="text" id="datepicker" class="form-control" data-bind="datepicker: currentDate" />
+                        </div> 
+                    </div>
+
+                    <div class="panel-heading">
+                        <h4>Limits <button type="button" class="btn btn-sm btn-hide-limits"><i class="fa fa-chevron-up"></i></button></h4>                        
+                    </div>
+
+                    <div class="panel-body panel-limits"> 
+                        <table class="table table-hover table-condensed nutrients-limits">
+                            <thead>
+                                <tr>
+                                    <th></th>  
+                                    <th>Kcalories</th>
+                                    <th>Protein</th>
+                                    <th>Carbs</th> 
+                                    <th>Fat</th>                 
+                                </tr> 
+                            </thead>
+                            <tbody>     
+                                <!--ko foreach: currentDateRation().meals-->
+                                <tr>
+                                    <td data-bind="text: $data.title"></td>
+                                    <td>
+                                        <input type="text" class="form-control input-sm" data-bind="value: $data.nutrientsLimit.kcalories, valueUpdate: 'afterkeydown'"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control input-sm" data-bind="value: $data.nutrientsLimit.protein, valueUpdate: 'afterkeydown'"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control input-sm" data-bind="value: $data.nutrientsLimit.carbs, valueUpdate: 'afterkeydown'"/>
+                                    </td>
+                                    <td>
+                                       <input type="text" class="form-control input-sm" data-bind="value: $data.nutrientsLimit.fat, valueUpdate: 'afterkeydown'"/>
+                                    </td>     
+                                </tr>
+                                <!--/ko-->            
+                                <tr data-bind="with: currentDateRation().nutrientsLimitPerDay">
+                                    <td>Total</td>
+                                    <td><input type="text" class="form-control input-sm" data-bind="value: kcalories, valueUpdate: 'afterkeydown'" disabled/></td>
+                                    <td><input type="text" class="form-control input-sm" data-bind="value: protein, valueUpdate: 'afterkeydown'" disabled/></td>
+                                    <td><input type="text" class="form-control input-sm" data-bind="value: carbs, valueUpdate: 'afterkeydown'" disabled/></td>
+                                    <td><input type="text" class="form-control input-sm" data-bind="value: fat, valueUpdate: 'afterkeydown'" disabled/></td>
+                                </tr> 
+                            </tbody> 
+                        </table>  
+                        <button type="button" class="btn btn-reset-limits" data-bind="click: currentDateRation().resetAllLimits"><i class="fa fa-refresh"></i> Reset</button>
+                    </div>                                                    
+                </div>
+
+                <div class="daily-ration" data-bind="foreach: currentDateRation().meals">
+                    <div class="panel panel-default panel-meal" data-bind="visible: dishes().length != 0">
+                        <div class="panel-heading">                      
+                            <h4 data-bind="text: $data.title"></h4>                            
+                        </div>                              
+                        <div class="panel-body">                            
+                            <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Kcalories</th>
+                                            <th>Protein</th>
+                                            <th>Carbs</th>
+                                            <th>Fat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Left</td>
+                                            <td data-bind="text: $data.nutrientsLeft.kcalories"></td>
+                                            <td data-bind="text: $data.nutrientsLeft.protein"></td>
+                                            <td data-bind="text: $data.nutrientsLeft.carbs"></td>
+                                            <td data-bind="text: $data.nutrientsLeft.fat"></td>
+                                        </tr>
+                                          <tr>
+                                            <td>Total</td>
+                                            <td data-bind="text: $data.nutrientsTotal.kcalories"></td>
+                                            <td data-bind="text: $data.nutrientsTotal.protein"></td>
+                                            <td data-bind="text: $data.nutrientsTotal.carbs"></td>
+                                            <td data-bind="text: $data.nutrientsTotal.fat"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <ul class="chosen-dishes" data-bind="foreach: {data: $data.dishes, as: 'dish'}">
+                                <li>
+                                    <img data-bind="attr: {src: dish.img, width: '15%'}" />
+                                    <a class="label label-default btn-remove-dish" data-bind="text: dish.name, click: function () {$parent.removeDish(dish)}"></a>
+                                </li>
+                            </ul>  
+                        </div>
+                    </div>        
+                </div>
+
+                <button id="toTop" class="btn btn-toTop"><i class="fa fa-arrow-up"></i> Back to top</button> 
+                <button id="print" class="btn btn-print"><i class="fa fa-print"></i> Print</button>  
+            </div>   
+
+            <div class="col-sm-4 visible-print-block">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2>Daily ration</h2>
+                        <h4 data-bind="text: currentDateRation().date"></h4>
+                    </div>
+                    <div class="panel-heading">
+                        <h4>Limits</h4>
+                    </div>
+                    <table class="table table-hover table-condensed nutrients-limits">
+                        <thead>
+                            <tr>
+                                <th></th>  
+                                <th>Kcalories</th>
+                                <th>Protein</th>
+                                <th>Carbs</th> 
+                                <th>Fat</th>                 
+                            </tr> 
+                        </thead>
+                        <tbody>     
+                            <!--ko foreach: currentDateRation().meals-->
+                            <tr>
+                                <td data-bind="text: $data.title"></td>
+                                <td><input type="text" class="form-control" data-bind="value: $data.nutrientsLimit.kcalories, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="value: $data.nutrientsLimit.protein, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="value: $data.nutrientsLimit.carbs, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="value: $data.nutrientsLimit.fat, valueUpdate: 'afterkeydown'"/></td>     
+                            </tr>
+                            <!--/ko-->            
+                            <tr data-bind="with: currentDateRation().nutrientsLimitPerDay">
+                                <td>Total</td>
+                                <td><input type="text" class="form-control" data-bind="value: kcalories, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="value: protein, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="value: carbs, valueUpdate: 'afterkeydown'"/></td>
+                                <td><input type="text" class="form-control" data-bind="fat, valueUpdate: 'afterkeydown'"/></td>
+                            </tr> 
+                        </tbody> 
+                    </table>                    
+                </div>
+                <div data-bind="foreach: currentDateRation().meals">
+                    <div class="panel panel-default daily-ration-print" data-bind="visible: dishes().length != 0">
+                        <div class="panel-heading">                      
+                            <h4 data-bind="text: $data.title"></h4>
+                        </div>                              
+                        <div class="panel-body">                            
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Kcalories</th>
+                                        <th>Protein</th>
+                                        <th>Carbs</th>
+                                        <th>fat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Left</td>
+                                        <td data-bind="text: $data.nutrientsLeft.kcalories"></td>
+                                        <td data-bind="text: $data.nutrientsLeft.protein"></td>
+                                        <td data-bind="text: $data.nutrientsLeft.carbs"></td>
+                                        <td data-bind="text: $data.nutrientsLeft.fat"></td>
+                                    </tr>
+                                      <tr>
+                                        <td>Total</td>
+                                        <td data-bind="text: $data.nutrientsTotal.kcalories"></td>
+                                        <td data-bind="text: $data.nutrientsTotal.protein"></td>
+                                        <td data-bind="text: $data.nutrientsTotal.carbs"></td>
+                                        <td data-bind="text: $data.nutrientsTotal.fat"></td>
+                                    </tr>
+                                </tbody>        
+                            </table>
+                            <ul data-bind="foreach: {data: $data.dishes, as: 'dish'}">
+                                <li>
+                                    <img data-bind="attr: {src: dish.img, width: '15%'}" />
+                                    <a class="label label-default" data-bind="text: dish.name, click: function () {$parent.removeDish(dish)}"></a>
+                                </li>
+                            </ul> 
+                        </div>                        
+                    </div>        
+                </div>  
+            </div>             
+        </div>        
+    </div>
+   
+    <script src="js/vendor/jquery-2.1.1.min.js"></script>    
+    <script src="js/vendor/jquery-ui.js"></script>
+    <script src="js/vendor/knockout-3.2.0.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/rationplanner.js"></script>
+    <script src="js/extenders.js"></script>
+    <script src="js/constructors.js"></script>    
+    <script src="js/datepicker.js"></script>
+    <script src="js/dishes.js"></script>   
+    <script src="js/scripts.js"></script>
+</body>
+</html>
