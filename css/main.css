@@ -165,10 +165,6 @@ th {
 	overflow: auto;	
 }
 
-.panel-daily-ration {
-	text-align: center;
-}
-
 .chosen-dishes li{
 	text-align: left;
 	margin-bottom: 2px;
@@ -190,6 +186,10 @@ th {
 .daily-ration-print ul {
 	padding-left: 10px !important;
 	text-align: left;	
+}
+
+.table-dishes .dish-img {
+    width: 25%;    
 }
 
 

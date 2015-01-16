@@ -104,34 +104,32 @@
                 <div data-bind="foreach: {data: filteredDishes, as: 'dish'}">
                     <table class="table table-hover table-dishes">
                         <tr>
-                            <td rowspan="4">
-                                <img data-bind="attr: {src: dish.img, width: '220px'}"/>
+                            <td rowspan="3" class="dish-img" >
+                                <img alt="" data-bind="attr: {src: dish.img, width: '220px'}"/>
                             </td>
-                        </tr>
-                        <tr>                
                             <td colspan="4">
                                 <h3 data-bind="text: dish.name">Dish</h3>
                                 <div data-bind="foreach: {data: $root.currentDateRation().meals, as: 'meal'}">
                                     <button type="button" class="btn btn-sm btn-addDish" data-bind="text: meal.title, click: function(){meal.addDish(dish)}"></button>
                                 </div>
-                            </td>               
+                            </td>
                         </tr>
                         <tr>
                             <td>Kcalories
-                                <span data-bind="text: dish.kcalories"></span>
+                                <p data-bind="text: dish.kcalories"></p>
                             </td>
                             <td>Protein
-                                <span data-bind="text: dish.protein"></span>
+                                <p data-bind="text: dish.protein"></p>
                             </td>
                             <td>Carbs
-                                <span data-bind="text: dish.carbs"></span>
+                                <p data-bind="text: dish.carbs"></p>
                             </td>
                             <td>Fat
-                                <span data-bind="text: dish.fat"></span>
+                                <p data-bind="text: dish.fat"></p>
                             </td>
                         </tr>                        
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 Ingredients: 
                                 <!--ko foreach: dish.ingredients-->
                                 <span data-bind="text: $data" class="label label-default"></span>
@@ -235,7 +233,7 @@
                                 </table>
                             <ul class="chosen-dishes" data-bind="foreach: {data: $data.dishes, as: 'dish'}">
                                 <li>
-                                    <img data-bind="attr: {src: dish.img, width: '15%'}" />
+                                    <img alt="" data-bind="attr: {src: dish.img, width: '15%'}" />
                                     <a class="label label-default btn-remove-dish" data-bind="text: dish.name, click: function () {$parent.removeDish(dish)}"></a>
                                 </li>
                             </ul>  
@@ -321,7 +319,7 @@
                             </table>
                             <ul data-bind="foreach: {data: $data.dishes, as: 'dish'}">
                                 <li>
-                                    <img data-bind="attr: {src: dish.img, width: '15%'}" />
+                                    <img alt="" data-bind="attr: {src: dish.img, width: '15%'}" />
                                     <a class="label label-default" data-bind="text: dish.name, click: function () {$parent.removeDish(dish)}"></a>
                                 </li>
                             </ul> 
