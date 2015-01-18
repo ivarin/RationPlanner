@@ -19,7 +19,7 @@ $(document).ready(function() {
  
     $('.daily-ration').affix({
         offset: {
-            top: 600         
+            top: 620         
         }
     }); 
 

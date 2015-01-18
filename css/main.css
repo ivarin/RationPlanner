@@ -154,6 +154,10 @@ th {
     bottom: 15px;     
 }
 
+.daily-ration.affix-top {	    
+	top: 20px;	
+}
+
 .daily-ration.affix {	
 	top: 20px;
 	margin-right: 15px;
@@ -161,8 +165,8 @@ th {
 
 .daily-ration {
 	height: auto;
-	max-height: 550px;
-	overflow: auto;	
+	max-height: 620px;
+	overflow: auto;	    
 }
 
 .chosen-dishes li{
